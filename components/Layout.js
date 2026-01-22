@@ -7,7 +7,7 @@ export default function Layout({ children }) {
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
   
-  // Header scroll behavior: 0.6 Global header
+  // Header scroll behavior
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', handleScroll);
