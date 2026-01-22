@@ -1,16 +1,9 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { client, urlFor } from '../../lib/sanity';
 
-// Mock data with images for the preview
-const projects = [
-  { id: 1, title: "Apex Architecture", tags: "Identity, Web", year: "2025", img: "https://placehold.co/600x400/1a1a1a/FFF" },
-  { id: 2, title: "Mono Light", tags: "Product", year: "2024", img: "https://placehold.co/600x400/333333/FFF" },
-  { id: 3, title: "Forma 22", tags: "Editorial", year: "2024", img: "https://placehold.co/600x400/555555/FFF" },
-  { id: 4, title: "Klimt Systems", tags: "Design System", year: "2023", img: "https://placehold.co/600x400/000000/FFF" },
-];
-
-export default function Projects() {
+export default function Projects({ projects }) {
   const [hoveredProject, setHoveredProject] = useState(null);
 
   return (
@@ -21,8 +14,8 @@ export default function Projects() {
       <div className="mb-s10 border-t border-borderSubtle">
         {projects.map((p) => (
           <Link 
-            href={`/projects/${p.id}`} 
-            key={p.id} 
+            href={`/projects/${p.slug.current}`} 
+            key={p._id} 
             className="group block"
             // Set hover state on mouse enter/leave for the preview panel
             onMouseEnter={() => setHoveredProject(p)}
@@ -34,7 +27,6 @@ export default function Projects() {
               {/* Title Column */}
               <div className="col-span-1 tablet:col-span-7 flex justify-between tablet:block">
                 <h3 className="text-h3 group-hover:underline transition-all duration-120">{p.title}</h3>
-                {/* Mobile Year shows right of title */}
                 <span className="tablet:hidden text-smallMeta text-grey">{p.year}</span>
               </div>
 
@@ -54,7 +46,7 @@ export default function Projects() {
 
       {/* Preview Panel (Desktop Only) */}
       <AnimatePresence>
-        {hoveredProject && (
+        {hoveredProject && hoveredProject.mainImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -65,11 +57,10 @@ export default function Projects() {
                 width: '360px',
                 height: '240px',
                 borderRadius: '14px',
-                top: '88px', // Header (64px) + 24px
-                right: 'var(--preview-offset, 32px)', // Matches container padding
+                top: '88px',
+                right: 'var(--preview-offset, 32px)',
             }}
           >
-            {/* CSS variable for responsive right offset */}
             <style jsx>{`
               @media (min-width: 1200px) {
                 div { --preview-offset: 48px; }
@@ -77,7 +68,7 @@ export default function Projects() {
             `}</style>
 
             <img 
-              src={hoveredProject.img} 
+              src={urlFor(hoveredProject.mainImage).width(600).height(400).url()} 
               alt={hoveredProject.title}
               className="w-full h-full object-cover" 
             />
@@ -86,4 +77,17 @@ export default function Projects() {
       </AnimatePresence>
     </div>
   );
+}
+
+// Fetch data from Sanity
+export async function getStaticProps() {
+  const projects = await client.fetch(`*[_type == "project"] | order(year desc)`);
+
+  return {
+    props: {
+      projects,
+    },
+    // Re-generate the page every 10 seconds if new data exists
+    revalidate: 10, 
+  };
 }
