@@ -3,19 +3,43 @@
 @tailwind utilities;
 
 :root {
-  font-size: 16px;
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
 }
 
 body {
-  @apply bg-paper text-ink font-sans antialiased;
-  line-height: 1.5;
+  color: #000000;
+  background: #FFFFFF;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* [Section 3.3] Link Styling Defaults */
 a {
+  font-weight: 500;
+  letter-spacing: 0.01em;
   text-decoration: none;
 }
 
-a:focus-visible {
-  outline: 2px solid theme('colors.ink');
-  outline-offset: 2px;
+/* Utilities for Lenis Smooth Scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }

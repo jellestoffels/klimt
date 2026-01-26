@@ -1,10 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Header from "@/components/Header";
-import PageTransition from "@/components/PageTransition";
-
-const inter = Inter({ subsets: ["latin"] });
+import PageTransition from "@/components/PageTransition"; // Keep existing as per 8.1
+import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
   title: "Klimt Studio",
@@ -17,10 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
-      <body className="bg-paper text-ink antialiased">
-        <Header />
-        <PageTransition>{children}</PageTransition>
+    <html lang="en">
+      <body className="antialiased">
+        <SmoothScroll>
+          <Header />
+          <PageTransition>{children}</PageTransition>
+        </SmoothScroll>
       </body>
     </html>
   );

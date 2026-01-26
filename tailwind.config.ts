@@ -2,54 +2,51 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      md: "768px", // Tablet
+      lg: "1024px", // Desktop
+    },
     extend: {
       colors: {
-        // Strict palette
-        ink: "#000000",
-        paper: "#FFFFFF",
+        black: "#000000",
+        white: "#FFFFFF",
         grey: "#9C9C9C",
-        // Derived UI colors
-        borderSubtle: "rgba(0,0,0,0.12)",
-        borderStrong: "rgba(0,0,0,0.24)",
-        overlayInk: "rgba(0,0,0,0.92)",
-        overlayGrey: "rgba(156,156,156,0.92)", 
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "Helvetica", "Arial", "sans-serif"],
-      },
-      spacing: {
-        // Spacing scale
-        s0: "0px",
-        s1: "4px",
-        s2: "8px",
-        s3: "12px",
-        s4: "16px",
-        s5: "24px",
-        s6: "32px",
-        s7: "48px",
-        s8: "64px",
-        s9: "96px",
-        s10: "128px",
-        headerMobile: "56px",
-        headerDesktop: "64px",
+        sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"],
       },
       fontSize: {
-        root: "16px",
-        bodyLarge: ["18px", "1.45"],
-        smallMeta: ["13px", "1.45"],
+        // [Section 2.2] Base sizes
+        body: ["14px", "1.35"],
         nav: ["14px", "1.2"],
+        label: ["13px", "1.2"],
+        // Specific page sizes
+        desc: ["16px", "1.35"],
+        introDesktop: ["64px", "0.95"],
+        introTablet: ["52px", "1.0"],
+        introMobile: ["38px", "1.02"],
+        contactDesktop: ["72px", "0.92"],
+        contactTablet: ["56px", "0.95"],
+        contactMobile: ["34px", "1.05"],
+      },
+      spacing: {
+        // [Section 2.3] Global spacing
+        headerDesktop: "64px",
+        headerMobile: "56px",
+        sectionDesktop: "64px",
+        sectionMobile: "40px",
+        padDesktop: "48px",
+        padTablet: "32px",
+        padMobile: "20px",
       },
       borderRadius: {
-        small: "8px",
-        medium: "14px",
-        large: "22px",
+        page: "22px",
       },
-      maxWidth: {
-        container: "1200px",
-      }
     },
   },
   plugins: [],

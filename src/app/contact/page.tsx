@@ -1,41 +1,50 @@
 import { client } from "@/sanity/client";
+import Image from "next/image"; // Import Image
 
 export const revalidate = 60;
 
 export default async function Contact() {
-  const settings = await client.fetch(`*[_type == "settings"][0]`);
+  // Fetch footerLogo
+  const settings = await client.fetch(`*[_type == "settings"][0]{
+    email, socials, "footerLogoUrl": footerLogo.asset->url
+  }`);
 
   return (
-    // [cite: 301] Background grey
-    <main className="min-h-screen bg-grey text-ink pt-[calc(56px+48px)] md:pt-[calc(64px+96px)] px-5 md:px-8 lg:px-12">
-      <div className="max-w-[920px]">
-        {/* Email [cite: 319] */}
-        <h2 className="text-[clamp(32px,3.2vw,48px)] leading-[1.05] mb-s7 font-medium">
-          <a href={`mailto:${settings?.email}`} className="hover:underline decoration-paper decoration-1 underline-offset-[3px]">
-            {settings?.email || "hello@klimt.studio"}
+    <main className="min-h-screen bg-[#9C9C9C] text-black px-padMobile md:px-padTablet lg:px-padDesktop flex flex-col pt-[120px]">
+      
+      <div className="flex flex-col items-start gap-[24px] grow">
+        <a 
+          href={`mailto:${settings?.email}`} 
+          className="text-contactMobile md:text-contactTablet lg:text-contactDesktop font-medium leading-[0.92] border-b-[3px] border-black pb-1 hover:opacity-70 transition-opacity"
+        >
+          {settings?.email || "email@klimt.studio"}
+        </a>
+        
+        {settings?.socials?.[0] && (
+          <a 
+            href={settings.socials[0].url} 
+            target="_blank"
+            className="text-contactMobile md:text-contactTablet lg:text-contactDesktop font-medium leading-[0.92] border-b-[3px] border-black pb-1 hover:opacity-70 transition-opacity"
+          >
+            {settings.socials[0].platform || "Instagram"}
           </a>
-        </h2>
+        )}
+      </div>
 
-        {/* Info Grid */}
-        <div className="grid gap-s6">
-          <div>
-            <span className="block text-smallMeta uppercase tracking-[0.06em] mb-2 text-ink/65">Socials</span>
-            <div className="flex gap-[18px]">
-               {settings?.socials?.map((s: any) => (
-                 <a key={s.platform} href={s.url} target="_blank" className="hover:underline decoration-paper decoration-1 underline-offset-[3px]">{s.platform}</a>
-               ))}
-            </div>
-          </div>
-          
-          <div>
-            <span className="block text-smallMeta uppercase tracking-[0.06em] mb-2 text-ink/65">Location</span>
-            <p>{settings?.location}</p>
-          </div>
-
-          <div>
-            <span className="block text-smallMeta uppercase tracking-[0.06em] mb-2 text-ink/65">Availability</span>
-            <p>{settings?.availability || "Open to new projects"}</p>
-          </div>
+      {/* Dynamic Footer Logo */}
+      <div className="pb-[24px] lg:pb-[32px] mt-auto">
+        <div className="opacity-35 relative h-[64px] md:h-[110px] lg:h-[140px] w-full max-w-[500px]">
+          {settings?.footerLogoUrl ? (
+             <Image 
+               src={settings.footerLogoUrl} 
+               alt="Footer Logo" 
+               fill 
+               className="object-contain object-left-bottom"
+             />
+          ) : (
+             // Fallback text if no image
+             <span className="text-[64px] font-bold">KLIMT</span>
+          )}
         </div>
       </div>
     </main>

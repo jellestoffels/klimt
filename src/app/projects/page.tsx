@@ -1,25 +1,65 @@
 import { client } from "@/sanity/client";
-import ProjectRow from "@/components/ProjectRow";
+import Link from "next/link";
+import Image from "next/image";
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 60;
 
 export default async function Projects() {
-  const projects = await client.fetch(`*[_type == "project"]|order(year desc){
-    _id, title, slug, year, tags, "imageUrl": thumbnail.asset->url
+  // Fetch projectsLabel from settings
+  const data = await client.fetch(`{
+    "projects": *[_type == "project"]|order(year desc){
+      _id, title, slug, year, "imageUrl": thumbnail.asset->url, "role": meta.role
+    },
+    "settings": *[_type == "settings"][0]{ projectsLabel }
   }`);
 
+  const { projects, settings } = data;
+
   return (
-    <main className="pt-[calc(56px+48px)] md:pt-[calc(64px+64px)] px-5 md:px-8 lg:px-12 max-w-container mx-auto">
-      {/* Title [cite: 143] */}
-      <h2 className="text-[clamp(32px,3.2vw,48px)] leading-[1.08] font-medium tracking-[-0.015em] mb-s7">
-        Selected Works
-      </h2>
+    <main className="min-h-screen bg-black text-white px-padMobile md:px-padTablet lg:px-padDesktop pb-sectionDesktop pt-headerDesktop">
       
-      {/* Projects List [cite: 153] */}
-      <div className="border-t border-borderSubtle mb-s10">
-        {projects.map((p: any) => (
-          <ProjectRow key={p._id} project={p} />
-        ))}
+      {/* Dynamic Label */}
+      <div className="mt-sectionDesktop md:mt-[48px] mobile:mt-[40px] mb-[48px] flex items-start">
+        <span className="text-[16px] leading-[1.35]">
+          {settings?.projectsLabel || "Selected Projects"}
+        </span>
+        <sup className="text-[11px] text-grey ml-[6px] top-[-6px] relative">{projects.length}</sup>
+      </div>
+      
+      {/* Grid ... (Keep existing grid code) */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-[24px] md:gap-[20px] mobile:gap-[24px]">
+        {projects.map((p: any, index: number) => {
+          const isFeature = index % 3 === 0;
+          const colSpan = isFeature ? "md:col-span-6" : "md:col-span-3";
+
+          return (
+            <Link 
+              key={p._id} 
+              href={`/projects/${p.slug.current}`}
+              className={`group flex flex-col ${colSpan} mb-[24px] md:mb-0`}
+            >
+              <div className="relative w-full aspect-video bg-[#1a1a1a] overflow-hidden">
+                {p.imageUrl && (
+                  <Image 
+                    src={p.imageUrl} 
+                    fill 
+                    alt={p.title}
+                    className="object-cover transition-all duration-120 group-hover:brightness-92"
+                    sizes={isFeature ? "50vw" : "25vw"}
+                  />
+                )}
+              </div>
+              <div className="mt-[10px] flex flex-col items-start">
+                <span className="text-[14px] text-white font-medium group-hover:underline decoration-1 underline-offset-2">
+                  {p.title}
+                </span>
+                <span className="text-[13px] text-grey mt-1">
+                  {p.role || "Design"}
+                </span>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </main>
   );
