@@ -50,14 +50,20 @@ export default defineType({
       title: 'Summary',
       type: 'text',
     }),
-    defineField({
+  defineField({
       name: 'gallery',
       title: 'Media Gallery',
       type: 'array',
       of: [
+        // 1. Images
         { type: 'image', options: { hotspot: true }, fields: [
            {name: 'caption', type: 'string', title: 'Caption'}
         ]},
+        // 2. NEW: Videos (Standard file upload)
+        { type: 'file', name: 'video', title: 'Video File', fields: [
+           {name: 'caption', type: 'string', title: 'Caption'}
+        ]},
+        // 3. Text Sections
         { type: 'object', name: 'textSection', title: 'Text Section', fields: [
            {name: 'heading', type: 'string', title: 'Heading'},
            {name: 'body', type: 'text', title: 'Body'}
