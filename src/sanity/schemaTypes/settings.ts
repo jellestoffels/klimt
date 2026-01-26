@@ -5,14 +5,23 @@ export default defineType({
   title: 'Site Settings',
   type: 'document',
   fields: [
-    // 1. Global SEO / Meta
+    // 1. Global SEO / Meta & Home Content
     defineField({ 
       name: 'description', 
       type: 'text', 
-      title: 'Home Description',
-      description: 'The short intro text on the home page.' 
+      title: 'Home Description (Short Text)', 
+      description: 'The short text displayed on the home page.',
+      rows: 3
     }),
     
+    defineField({
+      name: 'homeImage',
+      type: 'image',
+      title: 'Home Page Center Image',
+      description: 'The main image displayed in the center of the home page.',
+      options: { hotspot: true }
+    }),
+
     // 2. Branding (Logos)
     defineField({
       name: 'headerLogo',

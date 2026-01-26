@@ -4,19 +4,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import Logo from "@/components/Logo";
-import { client } from "@/sanity/client"; // Import client
+import { client } from "@/sanity/client";
 
-// Define the shape of the settings we need
 interface HeaderSettings {
   logoUrl: string | null;
 }
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [logoUrl, setLogoUrl] = useState<string | null>(null); // State for logo
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const pathname = usePathname();
 
-  // Fetch Logo on mount
   useEffect(() => {
     const fetchSettings = async () => {
       const data = await client.fetch(`*[_type == "settings"][0]{ "logoUrl": headerLogo.asset->url }`);
@@ -29,12 +27,10 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Color Logic
   const isDarkMode = pathname === "/projects";
   const textColor = isDarkMode ? "text-white" : "text-black";
-  const logoColor = isDarkMode ? "white" : "black"; // Pass this to Logo component
+  const logoColor = isDarkMode ? "white" : "black";
 
-  // Scroll BG Logic
   let scrollBg = "bg-transparent";
   if (scrolled) {
     if (pathname === "/projects") scrollBg = "bg-black/92";
@@ -61,8 +57,8 @@ export default function Header() {
       )}
     >
       <div className="w-full h-full flex items-center justify-between">
-        <Link href="/" className="block w-[120px] md:w-[140px] h-[30px] md:h-[40px] relative">
-          {/* Pass the dynamic URL and Color */}
+        {/* UPDATED SIZE: Way bigger as requested */}
+        <Link href="/" className="block w-[180px] md:w-[240px] h-[40px] md:h-[50px] relative">
           <Logo src={logoUrl} color={logoColor} className="w-full h-full" />
         </Link>
         

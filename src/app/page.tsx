@@ -1,25 +1,36 @@
 import { client } from "@/sanity/client";
-import Logo from "@/components/Logo"; // Reuse the component
+import Image from "next/image";
 
 export const revalidate = 60;
 
 export default async function Home() {
-  // Fetch logoUrl alongside description
+  // Fetch description AND homeImage
   const settings = await client.fetch(`*[_type == "settings"][0]{ 
     description, 
-    "logoUrl": headerLogo.asset->url 
+    "homeImageUrl": homeImage.asset->url 
   }`);
 
   return (
-    <main className="min-h-screen bg-white pt-[120px] px-padMobile md:px-padTablet lg:px-padDesktop">
-      <div className="flex flex-col items-start max-w-[800px]">
+    // Centered Layout
+    <main className="min-h-screen bg-white px-padMobile md:px-padTablet lg:px-padDesktop flex flex-col items-center justify-center">
+      
+      <div className="flex flex-col items-center text-center max-w-[800px] w-full">
         
-        {/* Dynamic Logo Block */}
-        <div className="mb-[24px] w-[180px] md:w-[220px] h-[50px]">
-           <Logo src={settings?.logoUrl} color="black" className="w-full h-full" />
-        </div>
+        {/* Center Image (If uploaded) */}
+        {settings?.homeImageUrl && (
+          <div className="relative w-full max-w-[600px] aspect-[4/3] mb-[32px] md:mb-[40px]">
+             <Image 
+               src={settings.homeImageUrl} 
+               alt="Studio Feature" 
+               fill 
+               className="object-cover"
+               priority
+             />
+          </div>
+        )}
 
-        <p className="text-desc text-black leading-[1.35]">
+        {/* Short Text */}
+        <p className="text-desc text-black leading-[1.35] max-w-[58ch]">
           {settings?.description || "Klimt Studio is a design practice focused on digital experiences."}
         </p>
 
