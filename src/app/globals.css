@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-size: 16px;
+}
+
+body {
+  @apply bg-paper text-ink font-sans antialiased;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:focus-visible {
+  outline: 2px solid theme('colors.ink');
+  outline-offset: 2px;
+}
