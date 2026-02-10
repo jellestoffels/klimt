@@ -1,60 +1,78 @@
-import { client, urlFor } from "@/sanity/client";
+import { client } from "@/sanity/client";
+import Image from "next/image";
+import Footer from "@/components/Footer";
 
 export const revalidate = 60;
 
 export default async function Info() {
-  const data = await client.fetch(`*[_type == "info"][0]`);
+  const data = await client.fetch(`*[_type == "info"][0]{
+    headline,
+    intro,
+    disciplines,
+    clients[]{
+      asset->{url},
+      name
+    }
+  }`);
 
   return (
-    <main className="pt-[calc(56px+48px)] md:pt-[calc(64px+96px)] px-5 md:px-8 lg:px-12 max-w-container mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <main className="min-h-screen bg-white text-black flex flex-col pt-[120px]">
+      
+      <div className="w-full max-w-custom mx-auto px-4 laptop:px-[16px] flex-grow">
         
-        {/* Left Content (Cols 1-7) [cite: 272] */}
-        <div className="md:col-span-7">
-          <h2 className="text-[clamp(32px,3.2vw,48px)] leading-[1.08] font-medium tracking-[-0.015em] mb-s6 max-w-[22ch]">
-            {data?.headline}
-          </h2>
-
-          <p className="text-[16px] md:text-[18px] leading-[1.45] max-w-[60ch] mb-s8">
-            {data?.intro}
-          </p>
-
-          <div className="mb-s8">
-            {data?.services?.map((group: any, i: number) => (
-              <div key={i} className="mb-s6">
-                <span className="block text-smallMeta uppercase tracking-[0.06em] mb-3">{group.group}</span>
-                <ul>
-                  {group.items?.map((item: string, j: number) => (
-                    <li key={j} className="mb-s2">{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          {data?.clients && (
-            <div className="mb-s9">
-              <span className="block text-smallMeta uppercase tracking-[0.06em] mb-3">Select Clients</span>
-              <p className="max-w-[50ch] leading-relaxed text-[16px]">
-                {data.clients.join(", ")}
-              </p>
-            </div>
-          )}
+        {/* 1. Big Headline */}
+        <div className="mb-[80px]">
+          <h1 className="text-[clamp(24px,3vw,40px)] font-medium leading-[1.1] tracking-tight max-w-[900px]">
+            {data?.headline || "We creates design solutions for brands driving the new wave in entertainment, culture, and commerce."}
+          </h1>
         </div>
 
-        {/* Right Content Portrait [cite: 273, 293] */}
-        <div className="md:col-span-5 md:col-start-8">
-          {data?.portrait && (
-            <div className="relative w-full">
-               <img 
-                 src={urlFor(data.portrait).url()} 
-                 alt="Portrait"
-                 className="w-full h-auto rounded-medium object-cover max-h-[520px]"
-               />
-            </div>
-          )}
+        {/* 2. Intro Paragraph */}
+        <div className="mb-[100px] max-w-[800px]">
+           <p className="text-[18px] md:text-[24px] font-medium leading-[1.3] opacity-90">
+             {data?.intro || "We're a multidisciplinary creative studio rooted in branding, digital, and visual design."}
+           </p>
         </div>
+
+        {/* 3. Disciplines Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-[120px] border-t border-black/10 pt-8">
+          {data?.disciplines?.map((cat: any, i: number) => (
+            <div key={i}>
+              <h3 className="text-[14px] font-bold mb-4">{cat.category}</h3>
+              <ul className="space-y-1">
+                {cat.items?.map((item: string, j: number) => (
+                  <li key={j} className="text-[13px] opacity-70 hover:opacity-100 transition-opacity cursor-default">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* 4. Client Logos */}
+        <div className="mb-[120px]">
+           <h3 className="text-[14px] font-bold mb-8 opacity-50">Select Clients</h3>
+           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-12 gap-y-16 items-center">
+             {data?.clients?.map((logo: any, i: number) => (
+               <div key={i} className="w-full h-[40px] relative grayscale hover:grayscale-0 transition-all opacity-80 hover:opacity-100">
+                 {logo.asset && (
+                   <Image 
+                     src={logo.asset.url} 
+                     alt={logo.name || "Client"} 
+                     fill 
+                     className="object-contain object-left"
+                   />
+                 )}
+               </div>
+             ))}
+           </div>
+        </div>
+
       </div>
+
+      {/* Footer */}
+      <Footer color="black" />
     </main>
   );
 }

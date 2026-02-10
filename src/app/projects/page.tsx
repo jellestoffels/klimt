@@ -1,66 +1,68 @@
 import { client } from "@/sanity/client";
 import Link from "next/link";
-import Image from "next/image";
+import Footer from "@/components/Footer"; // Import Footer
 
 export const revalidate = 60;
 
 export default async function Projects() {
-  // Fetch projectsLabel from settings
-  const data = await client.fetch(`{
-    "projects": *[_type == "project"]|order(year desc){
-      _id, title, slug, year, "imageUrl": thumbnail.asset->url, "role": meta.role
-    },
-    "settings": *[_type == "settings"][0]{ projectsLabel }
+  const projects = await client.fetch(`*[_type == "project"]|order(year desc){
+    _id, title, slug, year, "imageUrl": thumbnail.asset->url
   }`);
 
-  const { projects, settings } = data;
-
   return (
-    <main className="min-h-screen bg-black text-white px-padMobile md:px-padTablet lg:px-padDesktop pb-sectionDesktop pt-headerDesktop">
+    <main className="min-h-screen bg-black text-white flex flex-col">
       
-      {/* Dynamic Label */}
-      <div className="mt-sectionDesktop md:mt-[48px] mobile:mt-[40px] mb-[48px] flex items-start">
-        <span className="text-[16px] leading-[1.35]">
-          {settings?.projectsLabel || "Selected Projects"}
-        </span>
-        <sup className="text-[11px] text-grey ml-[6px] top-[-6px] relative">{projects.length}</sup>
-      </div>
-      
-      {/* Grid ... (Keep existing grid code) */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-[24px] md:gap-[20px] mobile:gap-[24px]">
-        {projects.map((p: any, index: number) => {
-          const isFeature = index % 3 === 0;
-          const colSpan = isFeature ? "md:col-span-6" : "md:col-span-3";
+      {/* Main Content Area */}
+      <div className="flex-grow w-full max-w-custom mx-auto px-4 laptop:px-[16px] pt-[120px]"> {/* Increased PT to clear header */}
+        
+        {/* Section Header */}
+        <div className="h-[34px] flex items-center mb-[40px] border-b border-white/20 pb-2">
+          <span className="font-medium text-[14px] tracking-tight text-white">
+            Selected Projects
+          </span>
+        </div>
 
-          return (
-            <Link 
-              key={p._id} 
-              href={`/projects/${p.slug.current}`}
-              className={`group flex flex-col ${colSpan} mb-[24px] md:mb-0`}
-            >
-              <div className="relative w-full aspect-video bg-[#1a1a1a] overflow-hidden">
-                {p.imageUrl && (
-                  <Image 
-                    src={p.imageUrl} 
-                    fill 
-                    alt={p.title}
-                    className="object-cover transition-all duration-120 group-hover:brightness-92"
-                    sizes={isFeature ? "50vw" : "25vw"}
-                  />
-                )}
-              </div>
-              <div className="mt-[10px] flex flex-col items-start">
-                <span className="text-[14px] text-white font-medium group-hover:underline decoration-1 underline-offset-2">
-                  {p.title}
-                </span>
-                <span className="text-[13px] text-grey mt-1">
-                  {p.role || "Design"}
-                </span>
-              </div>
-            </Link>
-          );
-        })}
+        {/* Grid Structure */}
+        <div className="flex flex-wrap" style={{ gap: '24px 24px' }}>
+           {projects.map((p: any, i: number) => {
+             const positionInRow = i % 3;
+             // Grid logic from previous request
+             let widthClass = "";
+             if (positionInRow === 0) widthClass = "w-full md:w-[calc(50%-12px)]"; // Responsive tweak
+             if (positionInRow === 1) widthClass = "w-full md:w-[calc(25%-12px)]"; 
+             if (positionInRow === 2) widthClass = "w-full md:w-[calc(25%-12px)]"; 
+             
+             // Hardcoded laptop widths from previous brief (preserved for larger screens)
+             const laptopClass = positionInRow === 0 ? "laptop:w-[539px]" : "laptop:w-[262px]";
+
+             return (
+               <Link 
+                 key={p._id} 
+                 href={`/projects/${p.slug.current}`}
+                 className={`block relative mb-[40px] ${widthClass} ${laptopClass}`}
+               >
+                 <div className="relative w-full h-auto group">
+                    {p.imageUrl && (
+                      <img 
+                        src={p.imageUrl} 
+                        alt={p.title}
+                        className="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                      />
+                    )}
+                    
+                    <div className="mt-3 flex justify-between items-baseline">
+                      <span className="text-white font-medium text-[14px]">{p.title}</span>
+                      <span className="text-white/50 text-[12px]">{p.year}</span>
+                    </div>
+                 </div>
+               </Link>
+             )
+           })}
+        </div>
       </div>
+
+      {/* Footer (White mode for dark page) */}
+      <Footer color="white" />
     </main>
   );
 }

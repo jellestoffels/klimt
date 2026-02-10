@@ -6,12 +6,7 @@ import clsx from "clsx";
 import Logo from "@/components/Logo";
 import { client } from "@/sanity/client";
 
-interface HeaderSettings {
-  logoUrl: string | null;
-}
-
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const pathname = usePathname();
 
@@ -21,51 +16,56 @@ export default function Header() {
       if (data?.logoUrl) setLogoUrl(data.logoUrl);
     };
     fetchSettings();
-
-    const handleScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isDarkMode = pathname === "/projects";
-  const textColor = isDarkMode ? "text-white" : "text-black";
-  const logoColor = isDarkMode ? "white" : "black";
-
-  let scrollBg = "bg-transparent";
-  if (scrolled) {
-    if (pathname === "/projects") scrollBg = "bg-black/92";
-    else if (pathname === "/contact") scrollBg = "bg-[#9C9C9C]/92";
-    else scrollBg = "bg-white/92";
-  }
-
-  const linkClass = (path: string) =>
-    clsx(
-      "text-nav font-medium transition-all duration-200 relative",
-      textColor,
-      pathname === path 
-        ? `after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[1px] after:bg-current after:-mb-[3px]`
-        : "hover:underline hover:decoration-1 hover:underline-offset-[3px] opacity-70 hover:opacity-100"
-    );
+  const isProjects = pathname === "/projects";
+  // The Info page in the reference (Red BG) typically uses Black text, or White if dark.
+  // Assuming Info is White/Grey BG -> Black Text. 
+  
+  const textColor = isProjects ? "text-white" : "text-black";
+  const logoColor = isProjects ? "white" : "black";
 
   return (
     <header
       className={clsx(
         "fixed top-0 left-0 w-full z-50 transition-colors duration-300",
-        "h-headerMobile lg:h-headerDesktop",
-        "px-padMobile md:px-padTablet lg:px-padDesktop",
-        scrollBg
+        "h-[48px] md:h-[64px]", // Slightly taller for better touch targets
+        "px-4 laptop:px-[16px]",
+        // BG Logic: Black on Projects, Transparent mix on others
+        isProjects ? "bg-black" : "bg-transparent"
       )}
     >
-      <div className="w-full h-full flex items-center justify-between">
-        {/* UPDATED SIZE: Way bigger as requested */}
-        <Link href="/" className="block w-[180px] md:w-[240px] h-[40px] md:h-[50px] relative">
-          <Logo src={logoUrl} color={logoColor} className="w-full h-full" />
-        </Link>
+      {/* GRID LAYOUT: 4 Columns to spread items evenly */}
+      <div className="w-full h-full grid grid-cols-4 items-center max-w-custom mx-auto border-b border-transparent">
         
-        <nav className="flex gap-[16px] md:gap-[24px]">
-          <Link href="/projects" className={linkClass("/projects")}>Projects</Link>
-          <Link href="/contact" className={linkClass("/contact")}>Contact</Link>
-        </nav>
+        {/* COL 1: Logo (Left Aligned) */}
+        <div className="flex items-center justify-start">
+          <Link href="/" className="block relative w-[100px] md:w-[140px] h-[30px]">
+            <Logo src={logoUrl} color={logoColor} className="w-full h-full object-contain object-left" />
+          </Link>
+        </div>
+
+        {/* COL 2: Projects (Center-Left Aligned) */}
+        <div className="flex items-center justify-start md:justify-center">
+          <Link href="/projects" className={clsx("text-[14px] font-medium tracking-tight hover:opacity-50 transition-opacity", textColor)}>
+            Projects
+          </Link>
+        </div>
+
+        {/* COL 3: Info (Center-Right Aligned) */}
+        <div className="flex items-center justify-end md:justify-center">
+          <Link href="/info" className={clsx("text-[14px] font-medium tracking-tight hover:opacity-50 transition-opacity", textColor)}>
+            Info
+          </Link>
+        </div>
+
+        {/* COL 4: Contact (Right Aligned) */}
+        <div className="flex items-center justify-end">
+          <Link href="/contact" className={clsx("text-[14px] font-medium tracking-tight hover:opacity-50 transition-opacity", textColor)}>
+            Contact
+          </Link>
+        </div>
+
       </div>
     </header>
   );

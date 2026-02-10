@@ -4,35 +4,36 @@ import Image from "next/image";
 export const revalidate = 60;
 
 export default async function Home() {
-  // Fetch description AND homeImage
   const settings = await client.fetch(`*[_type == "settings"][0]{ 
     description, 
     "homeImageUrl": homeImage.asset->url 
   }`);
 
   return (
-    // Centered Layout
-    <main className="min-h-screen bg-white px-padMobile md:px-padTablet lg:px-padDesktop flex flex-col items-center justify-center">
+    <main className="min-h-screen bg-white pt-[140px] px-4 laptop:px-[16px] flex flex-col items-center">
       
-      <div className="flex flex-col items-center text-center max-w-[800px] w-full">
+      <div className="w-full max-w-[800px] flex flex-col items-center">
         
-        {/* Center Image (If uploaded) */}
+        {/* Center Image [Req Images] No crop, original aspect */}
         {settings?.homeImageUrl && (
-          <div className="relative w-full max-w-[600px] aspect-[4/3] mb-[32px] md:mb-[40px]">
-             <Image 
+          <div className="w-full mb-[40px] flex justify-center">
+             <img 
                src={settings.homeImageUrl} 
-               alt="Studio Feature" 
-               fill 
-               className="object-cover"
-               priority
+               alt="Studio Feature"
+               className="max-h-[60vh] w-auto object-contain" // Preserves aspect ratio
              />
           </div>
         )}
 
-        {/* Short Text */}
-        <p className="text-desc text-black leading-[1.35] max-w-[58ch]">
-          {settings?.description || "Klimt Studio is a design practice focused on digital experiences."}
-        </p>
+        {/* Studio Description [Req] */}
+        {/* Font: Neue Haas Unica – Medium */}
+        {/* Line count: exactly 2 lines */}
+        {/* Line-height: tight */}
+        <div className="w-full max-w-[600px] text-center">
+          <p className="font-desc font-medium text-[clamp(16px,2.5vw,22px)] leading-[1.1] tracking-[-0.32px] line-clamp-2 overflow-hidden text-black">
+            {settings?.description || "Klimt Studio is a design practice focused on digital experiences, creating work that lasts."}
+          </p>
+        </div>
 
       </div>
     </main>

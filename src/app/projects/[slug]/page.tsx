@@ -5,9 +5,10 @@ import Link from "next/link";
 async function getProject(slug: string) {
   return client.fetch(
     `*[_type == "project" && slug.current == $slug][0]{
-      title, year, meta, summary,
+      title, year, meta, intro, coverImage,
+      "coverUrl": coverImage.asset->url,
       gallery[]{
-        _type, _key, caption,
+        _type, _key, caption, layout, content,
         asset->{url, metadata {dimensions}}
       }
     }`,
@@ -21,77 +22,86 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
   if (!project) return <div>Not Found</div>;
 
   return (
-    <main className="bg-white min-h-screen">
-      
-      {/* [Section 6.2] Hero Media */}
-      {/* Height: 100vh - header (64px) */}
-      <section className="relative w-full h-[calc(100vh-56px)] lg:h-[calc(100vh-64px)] mt-[56px] lg:mt-[64px] px-padMobile md:px-padTablet lg:px-padDesktop pb-[24px]">
-        <div className="relative w-full h-full rounded-page overflow-hidden bg-gray-100">
-           {/* Use first gallery image as hero fallback if no dedicated hero field */}
-           {project.gallery?.[0]?.asset?.url && (
-             <Image 
-               src={project.gallery[0].asset.url}
-               fill
-               alt="Hero"
-               className="object-cover"
-               priority
-             />
-           )}
-           
-           {/* [Section 6.3] Docked Info Panel */}
-           <div className="absolute bottom-0 left-0 w-full bg-white border-t border-black/12 flex flex-col md:flex-row h-[240px] md:h-[220px] p-[24px]">
-             
-             {/* Left: Meta Table [Section 6.4] */}
-             <div className="w-full md:w-[420px] shrink-0 border-r-0 md:border-r border-black/0 pr-0 md:pr-[24px]">
-               <div className="flex flex-col">
-                 <MetaRow label="Client" value={project.meta?.client} />
-                 <MetaRow label="Year" value={project.year} />
-                 <MetaRow label="Role" value={project.meta?.role} />
-                 <MetaRow label="Discipline" value={project.meta?.disciplines} />
-               </div>
-             </div>
-
-             {/* Right: Intro Text [Section 6.5] */}
-             <div className="mt-4 md:mt-0 md:pl-[48px] flex items-center">
-               <h1 className="text-introMobile md:text-introTablet lg:text-introDesktop leading-[0.95] tracking-tighter text-black max-w-[820px]">
-                 {project.title}
-               </h1>
-             </div>
-           </div>
+    <main className="min-h-screen bg-white pt-[60px] pb-[100px]">
+      <div className="max-w-[1123px] mx-auto px-0">
+        
+        {/* Meta Section */}
+        <div className="flex justify-between mb-[60px]"> {/* Define spacing here */}
+          <div className="flex gap-12">
+            <div>
+              <span className="block text-[16px] font-medium opacity-50">Client</span>
+              <span className="block text-[16px] font-medium">{project.meta?.client}</span>
+            </div>
+            <div>
+              <span className="block text-[16px] font-medium opacity-50">Year</span>
+              <span className="block text-[16px] font-medium">{project.year}</span>
+            </div>
+          </div>
         </div>
-      </section>
 
-      {/* [Section 6.6] Gallery */}
-      <section className="pt-[96px] lg:pt-[160px] px-padMobile md:px-padTablet lg:px-padDesktop pb-sectionDesktop">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px] md:gap-[20px] lg:gap-[24px]">
-           {project.gallery?.slice(1).map((item: any) => (
-             <div key={item._key} className="w-full">
-               <div className="relative w-full aspect-[4/3] bg-gray-50">
-                  {item.asset && (
-                    <Image 
-                      src={item.asset.url} 
-                      alt="" 
-                      fill 
-                      className="object-cover"
-                    />
+        {/* [Req Project Description] 
+            Font: Neue Haas Unica Pro Heavy, 40px
+            Spacing: Distance to Cover Image must match spacing to Meta (mb-[60px])
+        */}
+        <div className="mb-[60px]">
+          <h1 className="font-heavy font-black text-[40px] leading-tight tracking-[-0.02em] max-w-[800px]">
+            {project.intro || project.title}
+          </h1>
+        </div>
+
+        {/* [Req Cover Image] 
+            Full Width (1123px), No Crop, 0px Radius
+        */}
+        {project.coverUrl && (
+          <div className="w-full mb-[60px]">
+            <img 
+              src={project.coverUrl} 
+              alt="Cover"
+              className="w-full h-auto object-contain rounded-none" // [Req 0px Radius]
+            />
+          </div>
+        )}
+
+        {/* [Req Images inside Project] 
+            Options: Full width or 2 vertical. Text blocks mixed in. 
+        */}
+        <div className="flex flex-wrap -mx-[12px]"> {/* Negative margin for gutters */}
+          {project.gallery?.map((item: any, i: number) => {
+            
+            // TEXT BLOCK [Req]
+            if (item._type === "textBlock") {
+              return (
+                <div key={item._key} className="w-full px-[12px] mb-[40px]">
+                  <p className="text-[16px] font-medium leading-[1.4] max-w-[600px]">
+                    {item.content}
+                  </p>
+                </div>
+              );
+            }
+
+            // IMAGE BLOCK
+            if (item._type === "image") {
+              const isHalf = item.layout === 'half';
+              const widthClass = isHalf ? "w-1/2" : "w-full";
+              
+              return (
+                <div key={item._key} className={`${widthClass} px-[12px] mb-[24px]`}>
+                  <img 
+                    src={item.asset?.url} 
+                    alt={item.caption || ""}
+                    className="w-full h-auto object-contain rounded-none block" // [Req No Crop, 0 Radius]
+                  />
+                  {item.caption && (
+                    <p className="mt-[10px] text-[14px] text-gray-500">{item.caption}</p>
                   )}
-               </div>
-               {item.caption && <p className="text-label text-grey mt-2">{item.caption}</p>}
-             </div>
-           ))}
+                </div>
+              );
+            }
+            return null;
+          })}
         </div>
-      </section>
 
+      </div>
     </main>
   );
-}
-
-function MetaRow({ label, value }: { label: string, value: string }) {
-  if (!value) return null;
-  return (
-    <div className="flex border-b border-black/12 py-[10px] px-[12px]">
-      <span className="w-[120px] text-label text-black shrink-0">{label}</span>
-      <span className="text-label text-black">{value}</span>
-    </div>
-  )
 }
