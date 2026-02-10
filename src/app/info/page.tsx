@@ -38,9 +38,9 @@ export default async function Info() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-[120px] border-t border-black/10 pt-8">
           {data?.disciplines?.map((cat: any, i: number) => (
             <div key={i}>
-              <h3 className="text-[14px] font-bold mb-4">{cat.category}</h3>
+              <h3 className="text-[14px] font-bold mb-4">{cat?.category || "Category"}</h3>
               <ul className="space-y-1">
-                {cat.items?.map((item: string, j: number) => (
+                {cat?.items?.map((item: string, j: number) => (
                   <li key={j} className="text-[13px] opacity-70 hover:opacity-100 transition-opacity cursor-default">
                     {item}
                   </li>
@@ -54,18 +54,21 @@ export default async function Info() {
         <div className="mb-[120px]">
            <h3 className="text-[14px] font-bold mb-8 opacity-50">Select Clients</h3>
            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-12 gap-y-16 items-center">
-             {data?.clients?.map((logo: any, i: number) => (
-               <div key={i} className="w-full h-[40px] relative grayscale hover:grayscale-0 transition-all opacity-80 hover:opacity-100">
-                 {logo.asset && (
+             {data?.clients?.map((logo: any, i: number) => {
+               // FIX: Safety check. If logo is empty, skip it.
+               if (!logo || !logo.asset) return null;
+
+               return (
+                 <div key={i} className="w-full h-[40px] relative grayscale hover:grayscale-0 transition-all opacity-80 hover:opacity-100">
                    <Image 
                      src={logo.asset.url} 
                      alt={logo.name || "Client"} 
                      fill 
                      className="object-contain object-left"
                    />
-                 )}
-               </div>
-             ))}
+                 </div>
+               );
+             })}
            </div>
         </div>
 
