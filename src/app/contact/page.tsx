@@ -21,8 +21,8 @@ export default async function Contact() {
       ];
 
   return (
-    <main className="min-h-screen bg-black px-4 pt-[100px] text-white laptop:px-[16px]">
-      <div className="contact-wrapper mx-auto grid min-h-[calc(100vh-100px)] w-full max-w-custom grid-cols-1 gap-12 pb-8 lg:grid-cols-[1fr_1.5fr_1fr] lg:gap-10 lg:pl-[40px]">
+    <main className="min-h-screen bg-black px-[40px] pt-[100px] text-white">
+      <div className="contact-wrapper grid min-h-[calc(100vh-100px)] w-full grid-cols-1 gap-12 pb-8 lg:grid-cols-[1fr_1.5fr_1fr] lg:gap-10">
         <div className="contact-info-column reveal-up relative flex flex-col gap-10 pt-6 lg:min-h-full lg:pt-4">
           <div>
             <p className="mb-[10px] text-[10px] uppercase tracking-[0.5px] text-[#888888]">Project Inquiries</p>
@@ -63,7 +63,7 @@ export default async function Contact() {
             </div>
           </div>
 
-          <p className="text-[8px] text-[#666666] lg:mt-auto">© 2026 Klimt Studio. All rights reserved.</p>
+          <p className="text-[8px] text-[#666666] lg:absolute lg:bottom-0 lg:left-0">© 2026 Klimt Studio. All rights reserved.</p>
         </div>
 
         <div className="contact-image-card reveal-up flex items-start justify-center pt-2 lg:pt-0">
@@ -85,8 +85,8 @@ export default async function Contact() {
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
 
             <div className="card-overlay-text absolute left-[8%] top-1/2 max-w-[280px] -translate-y-1/2">
-              <h1 className="mb-4 text-[32px] font-medium leading-none tracking-[-0.04em]">Studio Klimt</h1>
-              <p className="mb-5 text-[15px] leading-[1.45] text-white/80">
+              <h1 className="mb-4 text-[32px] font-medium leading-none tracking-[-0.5px]">Studio Klimt</h1>
+              <p className="mb-5 text-[15px] leading-[1.45] tracking-[-0.2px] text-white/80">
                 {settings?.contactBio ||
                   "A studio for creative direction, graphic systems, and motion design shaped by rhythm, restraint, and atmosphere."}
               </p>

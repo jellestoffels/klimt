@@ -24,8 +24,8 @@ export default async function Projects() {
 
   return (
     <main className="min-h-screen bg-white text-black flex flex-col">
-      <div className="flex-grow w-full max-w-custom mx-auto px-4 laptop:px-[16px] pt-[22vh] pb-[96px]">
-        <div className="reveal-up h-[34px] border-b border-black/15 pb-[15px] text-[9px] font-medium uppercase tracking-[0.08em] text-black/55">
+      <div className="flex-grow w-full px-[40px] pt-[22vh] pb-[96px]">
+        <div className="reveal-up h-[34px] border-b border-black/15 pb-[15px] text-[9px] font-medium uppercase tracking-[0.5px] text-black/55">
           <div className="flex items-center justify-between gap-4">
             <span>{settings?.projectsLabel || "Archive"}</span>
             <span>{projects.length} Projects</span>
@@ -33,7 +33,7 @@ export default async function Projects() {
         </div>
 
         <div className="reveal-up mb-[64px] pt-[18px]">
-          <h1 className="max-w-[860px] font-heavy text-[clamp(32px,5vw,76px)] font-black leading-[0.95] tracking-[-0.06em]">
+          <h1 className="max-w-[860px] text-[clamp(32px,4vw,56px)] font-medium leading-[1.05] tracking-[-1px]">
             Selected projects across identity, motion, digital systems, and image-making.
           </h1>
         </div>
@@ -67,11 +67,11 @@ export default async function Projects() {
                   </div>
 
                   <div className="border-t border-black/10 bg-white px-0 pb-0 pt-3">
-                    <div className="mb-2 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.12em] text-black/45">
+                    <div className="mb-2 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.5px] text-black/45">
                       <span>Project</span>
                       <span>{project.year || "Ongoing"}</span>
                     </div>
-                    <h2 className="text-[20px] font-medium leading-[1.05] tracking-[-0.03em] text-black sm:text-[24px]">
+                    <h2 className="text-[20px] font-medium leading-[1.05] tracking-[-0.5px] text-black sm:text-[24px]">
                       {project.title}
                     </h2>
                   </div>

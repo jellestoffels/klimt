@@ -91,41 +91,41 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
   const gap = project.layoutGap || 20;
 
   return (
-    <main className="min-h-screen bg-white pb-[140px] pt-[22vh] text-black">
-      <div className="mx-auto w-full max-w-custom px-4 laptop:px-[16px]">
-        <div className="reveal-up mb-[18px] grid grid-cols-2 gap-y-3 border-b border-black/10 pb-[14px] text-[10px] font-medium uppercase tracking-[0.14em] text-black/50 md:grid-cols-4">
-          <div>
-            <span className="block text-black/35">Client</span>
-            <span className="mt-1 block text-black">{project.meta?.client || project.title}</span>
-          </div>
-          <div>
-            <span className="block text-black/35">Discipline</span>
-            <span className="mt-1 block text-black">{project.meta?.disciplines || project.meta?.role || "Creative Direction"}</span>
-          </div>
-          <div>
-            <span className="block text-black/35">Role</span>
-            <span className="mt-1 block text-black">{project.meta?.role || "Design"}</span>
-          </div>
-          <div className="md:text-right">
-            <span className="block text-black/35">Year</span>
-            <span className="mt-1 block text-black">{project.year || "2026"}</span>
-          </div>
-        </div>
+    <main className="min-h-screen bg-white text-black">
+      <div className="h-[40vh] bg-white" />
 
-        <div className="reveal-up mb-[56px] pt-[14px]">
-          <h1 className="max-w-[960px] font-heavy text-[clamp(34px,4.6vw,72px)] font-black leading-[0.98] tracking-[-0.05em]">
-            {project.intro || project.title}
+      <div className="reveal-up grid grid-cols-2 px-[40px] pb-[15px] text-[9px] font-medium uppercase tracking-[0.5px] text-black md:grid-cols-4">
+        <div>
+          {project.meta?.client || project.title}
+        </div>
+        <div className="md:pl-[10%]">
+          {project.meta?.disciplines || project.meta?.role || "Creative Direction"}
+        </div>
+        <div className="md:pr-[10%] md:text-right">
+          {project.meta?.role || "Design"}
+        </div>
+        <div className="text-right">
+          {project.year || "2026"}
+        </div>
+      </div>
+
+      {project.intro && (
+        <div className="reveal-up px-[40px] py-[100px]">
+          <h1 className="max-w-[80%] text-[4vw] font-medium leading-[1.1] tracking-[-1px]">
+            {project.intro}
           </h1>
         </div>
+      )}
 
+      <div className="flex flex-col gap-[20px] pb-[150px]">
         {project.coverUrl && (
-          <div className="reveal-up mb-[64px] w-full">
-            <img src={project.coverUrl} alt={project.title} className="block h-auto w-full rounded-none object-contain" />
+          <div className="reveal-up w-full">
+            <img src={project.coverUrl} alt={project.title} className="gallery-media block h-auto w-full object-contain" />
           </div>
         )}
 
         <div
-          className="reveal-up grid"
+          className="reveal-up grid px-[40px]"
           style={{
             gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${rows}, minmax(${rowHeight}px, auto))`,
@@ -141,7 +141,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                       fontSize: `${block.fontSize ?? 40}px`,
                       maxWidth: block.maxWidth ? `${block.maxWidth}px` : undefined,
                     }}
-                    className="font-medium leading-[1.05] tracking-[-0.05em]"
+                    className="font-medium leading-[1.1] tracking-[-1px]"
                   >
                     <p>{block.content}</p>
                   </div>

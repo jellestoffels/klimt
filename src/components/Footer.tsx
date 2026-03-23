@@ -22,15 +22,14 @@ export default function Footer({ color = "black" }: { color?: "black" | "white" 
   const borderClass = color === "white" ? "border-white/20" : "border-black/20";
 
   return (
-    // Added laptop:px-[16px] to match the rest of the site
-    <footer className={clsx("w-full px-4 laptop:px-[16px] pb-8 pt-12", textClass)}>
-      <div className={clsx("max-w-custom mx-auto border-t pt-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-8", borderClass)}>
+    <footer className={clsx("w-full px-[40px] pb-[32px] pt-[48px]", textClass)}>
+      <div className={clsx("flex flex-col items-start justify-between gap-8 border-t pt-[24px] md:flex-row md:items-end", borderClass)}>
         
         <div className="flex flex-col">
-          <h2 className="text-[clamp(40px,5vw,80px)] font-bold leading-[0.8] tracking-tighter opacity-100">
+          <h2 className="text-[clamp(40px,5vw,80px)] font-medium uppercase leading-[0.9] tracking-[-0.5px] opacity-100">
             KLIMT
           </h2>
-          <span className="text-[12px] opacity-50 mt-2">© 2026, Klimt Studio.</span>
+          <span className="mt-2 text-[12px] opacity-50">© 2026, Klimt Studio.</span>
         </div>
 
         <div className="max-w-[300px] text-[11px] opacity-60 leading-relaxed hidden md:block">
@@ -43,7 +42,7 @@ export default function Footer({ color = "black" }: { color?: "black" | "white" 
           <a href="#" className="text-[14px] font-medium hover:opacity-50 transition-opacity">Linkedin</a>
           <a href="#" className="text-[14px] font-medium hover:opacity-50 transition-opacity">Instagram</a>
           <div className="h-4" /> 
-          <span className="text-[14px] font-medium uppercase tracking-widest tabular-nums">
+          <span className="text-[14px] font-medium uppercase tracking-[0.5px] tabular-nums">
              {time || "AMS 00:00 — LA 00:00"}
           </span>
         </div>

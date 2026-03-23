@@ -12,7 +12,7 @@ export default function Logo({ className, src, color = "black" }: LogoProps) {
 
   if (!src) {
     // Fallback if no logo is uploaded yet (Text fallback)
-    return <span className={`font-bold tracking-widest uppercase ${className}`}>Klimt</span>;
+    return <span className={`text-[20px] font-medium leading-none tracking-[-0.5px] uppercase ${className}`}>Klimt</span>;
   }
 
   return (

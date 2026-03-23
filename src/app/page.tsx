@@ -10,8 +10,8 @@ export default async function Home() {
   }`);
 
   return (
-    <main className="min-h-screen overflow-hidden bg-white px-4 laptop:px-[16px]">
-      <section className="mx-auto flex min-h-screen w-full max-w-custom flex-col items-center justify-center gap-[30px] pb-[8vh] pt-[96px] text-center">
+    <main className="overflow-hidden bg-white">
+      <section className="flex h-screen w-full flex-col items-center justify-center gap-[30px] px-[40px] text-center">
         <div className="reveal-up flex w-full justify-center">
           {settings?.heroLogoUrl ? (
             <img
@@ -32,8 +32,8 @@ export default async function Home() {
           )}
         </div>
 
-        <div className="reveal-up max-w-[800px] px-4">
-          <p className="font-medium text-[13px] uppercase leading-[1.4] tracking-[0.12em] text-black sm:text-[15px]">
+        <div className="reveal-up max-w-[800px]">
+          <p className="font-medium text-[15px] uppercase leading-[1.4] tracking-[0.5px] text-black">
             {settings?.description || "A studio for creative direction, graphic and motion design shaped by rhythm."}
           </p>
         </div>
