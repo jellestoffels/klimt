@@ -7,13 +7,8 @@ type ProjectBlock = {
   alt?: string;
   caption?: string;
   content?: string;
-  align?: "left" | "center" | "right";
-  widthPercent?: number;
   maxWidth?: number;
-  offsetX?: number;
-  offsetY?: number;
   fontSize?: number;
-  layout?: "full" | "half";
   assetUrl?: string;
   videoFileUrl?: string;
   videoUrl?: string;
@@ -21,6 +16,10 @@ type ProjectBlock = {
   autoplay?: boolean;
   loop?: boolean;
   muted?: boolean;
+  columnStart?: number;
+  columnSpan?: number;
+  rowStart?: number;
+  rowSpan?: number;
 };
 
 type Project = {
@@ -28,6 +27,10 @@ type Project = {
   year?: string;
   intro?: string;
   coverUrl?: string;
+  layoutColumns?: number;
+  layoutRows?: number;
+  layoutRowHeight?: number;
+  layoutGap?: number;
   meta?: {
     client?: string;
     role?: string;
@@ -36,45 +39,18 @@ type Project = {
   gallery?: ProjectBlock[];
 };
 
-function getAlignmentClass(align?: "left" | "center" | "right") {
-  if (align === "left") {
-    return "justify-start text-left";
-  }
-
-  if (align === "right") {
-    return "justify-end text-right";
-  }
-
-  return "justify-center text-left";
-}
-
-function getBlockWidth(block: ProjectBlock) {
-  if (typeof block.widthPercent === "number") {
-    return Math.min(Math.max(block.widthPercent, 20), 100);
-  }
-
-  if (block.layout === "half") {
-    return 50;
-  }
-
-  return 100;
-}
-
-function getBlockStyle(block: ProjectBlock) {
-  const translateX = block.offsetX ?? 0;
-
+function getGridItemStyle(block: ProjectBlock) {
   return {
-    width: `${getBlockWidth(block)}%`,
+    gridColumn: `${block.columnStart ?? 1} / span ${block.columnSpan ?? 1}`,
+    gridRow: `${block.rowStart ?? 1} / span ${block.rowSpan ?? 1}`,
     maxWidth: block.maxWidth ? `${block.maxWidth}px` : undefined,
-    marginTop: block.offsetY ? `${block.offsetY}px` : undefined,
-    transform: translateX ? `translateX(${translateX}px)` : undefined,
   };
 }
 
 async function getProject(slug: string) {
   return client.fetch(
     `*[_type == "project" && slug.current == $slug][0]{
-      title, year, meta, intro,
+      title, year, meta, intro, layoutColumns, layoutRows, layoutRowHeight, layoutGap,
       "coverUrl": coverImage.asset->url,
       gallery[]{
         _type,
@@ -82,16 +58,15 @@ async function getProject(slug: string) {
         alt,
         caption,
         content,
-        align,
-        widthPercent,
         maxWidth,
-        offsetX,
-        offsetY,
         fontSize,
-        layout,
         autoplay,
         loop,
         muted,
+        columnStart,
+        columnSpan,
+        rowStart,
+        rowSpan,
         videoUrl,
         "assetUrl": coalesce(asset->url, image.asset->url),
         "videoFileUrl": videoFile.asset->url,
@@ -109,6 +84,11 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
   if (!project) {
     notFound();
   }
+
+  const columns = project.layoutColumns || 12;
+  const rows = project.layoutRows || 18;
+  const rowHeight = project.layoutRowHeight || 80;
+  const gap = project.layoutGap || 20;
 
   return (
     <main className="min-h-screen bg-white pb-[140px] pt-[22vh] text-black">
@@ -144,21 +124,26 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           </div>
         )}
 
-        <div className="flex flex-col gap-6">
+        <div
+          className="reveal-up grid"
+          style={{
+            gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${rows}, minmax(${rowHeight}px, auto))`,
+            gap: `${gap}px`,
+          }}
+        >
           {project.gallery?.map((block) => {
             if (block._type === "textBlock") {
               return (
-                <div key={block._key} className={`reveal-up flex w-full ${getAlignmentClass(block.align)}`}>
+                <div key={block._key} style={getGridItemStyle(block)} className="flex items-start">
                   <div
                     style={{
-                      ...getBlockStyle(block),
                       fontSize: `${block.fontSize ?? 40}px`,
+                      maxWidth: block.maxWidth ? `${block.maxWidth}px` : undefined,
                     }}
                     className="font-medium leading-[1.05] tracking-[-0.05em]"
                   >
-                    <p style={{ maxWidth: block.maxWidth ? `${block.maxWidth}px` : undefined }}>
-                      {block.content}
-                    </p>
+                    <p>{block.content}</p>
                   </div>
                 </div>
               );
@@ -172,8 +157,8 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
               }
 
               return (
-                <div key={block._key} className={`reveal-up flex w-full ${getAlignmentClass(block.align)}`}>
-                  <div style={getBlockStyle(block)}>
+                <div key={block._key} style={getGridItemStyle(block)} className="h-full w-full">
+                  <div className="h-full w-full">
                     <video
                       src={src}
                       poster={block.posterUrl}
@@ -182,7 +167,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                       muted={block.muted ?? true}
                       playsInline
                       controls
-                      className="block h-auto w-full"
+                      className="block h-full w-full object-cover"
                     />
                     {block.caption && (
                       <p className="mt-3 text-[12px] font-medium uppercase tracking-[0.12em] text-black/45">{block.caption}</p>
@@ -199,9 +184,9 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
             }
 
             return (
-              <div key={block._key} className={`reveal-up flex w-full ${getAlignmentClass(block.align)}`}>
-                <div style={getBlockStyle(block)}>
-                  <img src={imageUrl} alt={block.alt || block.caption || project.title} className="block h-auto w-full object-contain" />
+              <div key={block._key} style={getGridItemStyle(block)} className="h-full w-full">
+                <div className="h-full w-full">
+                  <img src={imageUrl} alt={block.alt || block.caption || project.title} className="block h-full w-full object-cover" />
                   {block.caption && (
                     <p className="mt-3 text-[12px] font-medium uppercase tracking-[0.12em] text-black/45">{block.caption}</p>
                   )}

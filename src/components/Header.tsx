@@ -18,52 +18,52 @@ export default function Header() {
     fetchSettings();
   }, []);
 
-  const isDarkHeader = pathname === "/projects" || pathname === "/contact";
-
-  const textColor = isDarkHeader ? "text-white" : "text-black";
-  const logoColor = isDarkHeader ? "white" : "black";
+  const isProjects = pathname === "/projects";
+  const isInfo = pathname === "/info";
+  const isContact = pathname === "/contact";
 
   return (
     <header
       className={clsx(
-        "fixed top-0 left-0 w-full z-50 transition-colors duration-300",
-        "h-[48px] md:h-[64px]", // Slightly taller for better touch targets
-        "px-4 laptop:px-[16px]",
-        // BG Logic: Black on Projects, Transparent mix on others
-        isDarkHeader ? "bg-transparent" : "bg-transparent"
+        "pointer-events-none fixed left-0 right-0 top-0 z-50 px-[24px] pt-[24px] mix-blend-difference md:px-[40px]"
       )}
     >
-      {/* GRID LAYOUT: 4 Columns to spread items evenly */}
-      <div className="w-full h-full grid grid-cols-4 items-center max-w-custom mx-auto border-b border-transparent">
-        
-        {/* COL 1: Logo (Left Aligned) */}
-        <div className="flex items-center justify-start">
-          <Link href="/" className="block relative w-[100px] md:w-[140px] h-[30px]">
-            <Logo src={logoUrl} color={logoColor} className="w-full h-full object-contain object-left" />
-          </Link>
-        </div>
+      <div className="mx-auto flex w-full max-w-custom items-start justify-between gap-6">
+        <Link href="/" className="pointer-events-auto block">
+          <div className="relative h-[44px] w-[104px] md:h-[70px] md:w-[166px]">
+            <Logo src={logoUrl} color="white" className="h-full w-full" />
+          </div>
+        </Link>
 
-        {/* COL 2: Projects (Center-Left Aligned) */}
-        <div className="flex items-center justify-start md:justify-center">
-          <Link href="/projects" className={clsx("text-[14px] font-medium tracking-tight hover:opacity-50 transition-opacity", textColor)}>
+        <nav className="pointer-events-auto flex items-start gap-[16px] md:gap-[24px]">
+          <Link
+            href="/projects"
+            className={clsx(
+              "text-[16px] leading-none tracking-[-0.02em] text-white transition-opacity hover:opacity-50 md:text-[20px]",
+              isProjects ? "font-medium" : "font-normal"
+            )}
+          >
             Projects
           </Link>
-        </div>
-
-        {/* COL 3: Info (Center-Right Aligned) */}
-        <div className="flex items-center justify-end md:justify-center">
-          <Link href="/info" className={clsx("text-[14px] font-medium tracking-tight hover:opacity-50 transition-opacity", textColor)}>
-            Info
+          <Link
+            href="/info"
+            className={clsx(
+              "text-[16px] leading-none tracking-[-0.02em] text-white transition-opacity hover:opacity-50 md:text-[20px]",
+              isInfo ? "font-medium" : "font-normal"
+            )}
+          >
+            About
           </Link>
-        </div>
-
-        {/* COL 4: Contact (Right Aligned) */}
-        <div className="flex items-center justify-end">
-          <Link href="/contact" className={clsx("text-[14px] font-medium tracking-tight hover:opacity-50 transition-opacity", textColor)}>
+          <Link
+            href="/contact"
+            className={clsx(
+              "text-[16px] leading-none tracking-[-0.02em] text-white transition-opacity hover:opacity-50 md:text-[20px]",
+              isContact ? "font-medium" : "font-normal"
+            )}
+          >
             Contact
           </Link>
-        </div>
-
+        </nav>
       </div>
     </header>
   );

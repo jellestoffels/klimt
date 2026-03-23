@@ -5,35 +5,39 @@ export const revalidate = 60;
 export default async function Home() {
   const settings = await client.fetch(`*[_type == "settings"][0]{ 
     description, 
-    "homeImageUrl": homeImage.asset->url 
+    "homeImageUrl": homeImage.asset->url,
+    "heroLogoUrl": footerLogo.asset->url
   }`);
 
   return (
-    <main className="min-h-screen bg-white pt-[140px] px-4 laptop:px-[16px] flex flex-col items-center">
-      <div className="w-full max-w-[800px] flex flex-col items-center">
-        
-        {/* Center Image [Req Images] No crop, original aspect */}
-        {settings?.homeImageUrl && (
-          <div className="reveal-up w-full mb-[40px] flex justify-center">
-             <img 
-               src={settings.homeImageUrl} 
-               alt="Studio Feature"
-               className="max-h-[60vh] w-auto object-contain" // Preserves aspect ratio
-             />
-          </div>
-        )}
-
-        {/* Studio Description [Req] */}
-        {/* Font: Neue Haas Unica – Medium */}
-        {/* Line count: exactly 2 lines */}
-        {/* Line-height: tight */}
-        <div className="reveal-up w-full max-w-[600px] text-center">
-          <p className="font-desc font-medium text-[clamp(16px,2.5vw,22px)] leading-[1.1] tracking-[-0.32px] line-clamp-2 overflow-hidden text-black">
-            {settings?.description || "Klimt Studio is a design practice focused on digital experiences, creating work that lasts."}
-          </p>
+    <main className="min-h-screen overflow-hidden bg-white px-4 laptop:px-[16px]">
+      <section className="mx-auto flex min-h-screen w-full max-w-custom flex-col items-center justify-center gap-[30px] pb-[8vh] pt-[96px] text-center">
+        <div className="reveal-up flex w-full justify-center">
+          {settings?.heroLogoUrl ? (
+            <img
+              src={settings.heroLogoUrl}
+              alt="Studio Klimt"
+              className="h-auto w-[56vw] max-w-[640px] object-contain"
+            />
+          ) : settings?.homeImageUrl ? (
+            <img
+              src={settings.homeImageUrl}
+              alt="Studio Klimt"
+              className="h-auto w-[56vw] max-w-[640px] object-contain"
+            />
+          ) : (
+            <div className="font-heavy text-[clamp(56px,11vw,160px)] font-black uppercase leading-[0.85] tracking-[-0.08em]">
+              Klimt
+            </div>
+          )}
         </div>
 
-      </div>
+        <div className="reveal-up max-w-[800px] px-4">
+          <p className="font-medium text-[13px] uppercase leading-[1.4] tracking-[0.12em] text-black sm:text-[15px]">
+            {settings?.description || "A studio for creative direction, graphic and motion design shaped by rhythm."}
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

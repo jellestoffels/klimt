@@ -15,63 +15,74 @@ type ProjectListItem = {
 };
 
 export default async function Projects() {
-  const projects = (await client.fetch(`*[_type == "project"]|order(year desc){
+  const [projects, settings] = await Promise.all([
+    client.fetch(`*[_type == "project"]|order(year desc){
     _id, title, slug, year, "imageUrl": thumbnail.asset->url
-  }`)) as ProjectListItem[];
+  }`) as Promise<ProjectListItem[]>,
+    client.fetch(`*[_type == "settings"][0]{projectsLabel}`) as Promise<{ projectsLabel?: string } | null>,
+  ]);
 
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col">
-      {/* Main Content Area */}
-      <div className="flex-grow w-full max-w-custom mx-auto px-4 laptop:px-[16px] pt-[120px]"> {/* Increased PT to clear header */}
-        
-        {/* Section Header */}
-        <div className="reveal-up h-[34px] flex items-center mb-[40px] border-b border-white/20 pb-2">
-          <span className="font-medium text-[14px] tracking-tight text-white">
-            Selected Projects
-          </span>
+    <main className="min-h-screen bg-white text-black flex flex-col">
+      <div className="flex-grow w-full max-w-custom mx-auto px-4 laptop:px-[16px] pt-[22vh] pb-[96px]">
+        <div className="reveal-up h-[34px] border-b border-black/15 pb-[15px] text-[9px] font-medium uppercase tracking-[0.08em] text-black/55">
+          <div className="flex items-center justify-between gap-4">
+            <span>{settings?.projectsLabel || "Archive"}</span>
+            <span>{projects.length} Projects</span>
+          </div>
         </div>
 
-        {/* Grid Structure */}
-        <div className="flex flex-wrap" style={{ gap: '24px 24px' }}>
-           {projects.map((p, i: number) => {
-             const positionInRow = i % 3;
-             // Grid logic from previous request
-             let widthClass = "";
-             if (positionInRow === 0) widthClass = "w-full md:w-[calc(50%-12px)]"; // Responsive tweak
-             if (positionInRow === 1) widthClass = "w-full md:w-[calc(25%-12px)]"; 
-             if (positionInRow === 2) widthClass = "w-full md:w-[calc(25%-12px)]"; 
-             
-             // Hardcoded laptop widths from previous brief (preserved for larger screens)
-             const laptopClass = positionInRow === 0 ? "laptop:w-[539px]" : "laptop:w-[262px]";
+        <div className="reveal-up mb-[64px] pt-[18px]">
+          <h1 className="max-w-[860px] font-heavy text-[clamp(32px,5vw,76px)] font-black leading-[0.95] tracking-[-0.06em]">
+            Selected projects across identity, motion, digital systems, and image-making.
+          </h1>
+        </div>
 
-             return (
-               <Link 
-                 key={p._id} 
-                 href={`/projects/${p.slug.current}`}
-                 className={`reveal-up block relative mb-[40px] ${widthClass} ${laptopClass}`}
-               >
-                 <div className="relative w-full h-auto group">
-                    {p.imageUrl && (
-                      <img 
-                        src={p.imageUrl} 
-                        alt={p.title}
-                        className="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+        <div className="flex flex-wrap gap-x-[24px] gap-y-[48px]">
+          {projects.map((project, index) => {
+            const pattern = index % 3;
+            const widthClass =
+              pattern === 0
+                ? "w-full md:w-[calc(50%-12px)]"
+                : "w-full md:w-[calc(25%-12px)]";
+            const aspectClass = pattern === 0 ? "aspect-[4/5]" : "aspect-[3/4]";
+
+            return (
+              <Link
+                key={project._id}
+                href={`/projects/${project.slug.current}`}
+                className={`reveal-up group block ${widthClass}`}
+              >
+                <div className="relative overflow-hidden bg-black/5">
+                  <div className={`relative ${aspectClass} w-full overflow-hidden`}>
+                    {project.imageUrl ? (
+                      <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.015]"
                       />
+                    ) : (
+                      <div className="h-full w-full bg-black/5" />
                     )}
-                    
-                    <div className="mt-3 flex justify-between items-baseline">
-                      <span className="text-white font-medium text-[14px]">{p.title}</span>
-                      <span className="text-white/50 text-[12px]">{p.year}</span>
+                  </div>
+
+                  <div className="border-t border-black/10 bg-white px-0 pb-0 pt-3">
+                    <div className="mb-2 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.12em] text-black/45">
+                      <span>Project</span>
+                      <span>{project.year || "Ongoing"}</span>
                     </div>
-                 </div>
-               </Link>
-             )
-           })}
+                    <h2 className="text-[20px] font-medium leading-[1.05] tracking-[-0.03em] text-black sm:text-[24px]">
+                      {project.title}
+                    </h2>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
 
-      {/* Footer (White mode for dark page) */}
-      <Footer color="white" />
+      <Footer color="black" />
     </main>
   );
 }

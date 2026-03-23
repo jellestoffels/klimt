@@ -1,4 +1,36 @@
 import { defineField, defineType } from 'sanity'
+import ProjectGridInput from '../components/ProjectGridInput'
+
+const placementFields = [
+  defineField({
+    name: 'columnStart',
+    type: 'number',
+    title: 'Column Start',
+    initialValue: 1,
+    validation: (rule) => rule.min(1).max(24),
+  }),
+  defineField({
+    name: 'columnSpan',
+    type: 'number',
+    title: 'Column Span',
+    initialValue: 6,
+    validation: (rule) => rule.min(1).max(24),
+  }),
+  defineField({
+    name: 'rowStart',
+    type: 'number',
+    title: 'Row Start',
+    initialValue: 1,
+    validation: (rule) => rule.min(1).max(48),
+  }),
+  defineField({
+    name: 'rowSpan',
+    type: 'number',
+    title: 'Row Span',
+    initialValue: 4,
+    validation: (rule) => rule.min(1).max(48),
+  }),
+]
 
 export default defineType({
   name: 'project',
@@ -18,10 +50,42 @@ export default defineType({
     defineField({ name: 'thumbnail', type: 'image', title: 'Thumbnail (Portrait)', options: { hotspot: true } }),
 
     defineField({
+      name: 'layoutColumns',
+      type: 'number',
+      title: 'Grid Columns',
+      initialValue: 12,
+      validation: (rule) => rule.min(1).max(24),
+    }),
+    defineField({
+      name: 'layoutRows',
+      type: 'number',
+      title: 'Grid Rows',
+      initialValue: 18,
+      validation: (rule) => rule.min(1).max(60),
+    }),
+    defineField({
+      name: 'layoutRowHeight',
+      type: 'number',
+      title: 'Row Height (px)',
+      initialValue: 80,
+      validation: (rule) => rule.min(20).max(300),
+    }),
+    defineField({
+      name: 'layoutGap',
+      type: 'number',
+      title: 'Grid Gap (px)',
+      initialValue: 20,
+      validation: (rule) => rule.min(0).max(120),
+    }),
+
+    defineField({
       name: 'gallery',
-      title: 'Project Builder',
+      title: 'Project Grid Builder',
       type: 'array',
-      description: 'Drag blocks to reorder the page. Each block supports custom width, alignment, offsets, and text sizing.',
+      description: 'Add blocks below, then place them visually in the grid canvas. You control rows, columns, size, and position.',
+      components: {
+        input: ProjectGridInput,
+      },
       of: [
         {
           type: 'image',
@@ -31,59 +95,7 @@ export default defineType({
           fields: [
             { name: 'alt', type: 'string', title: 'Alt Text' },
             { name: 'caption', type: 'string', title: 'Caption' },
-            {
-              name: 'layout',
-              type: 'string',
-              title: 'Preset Layout',
-              options: {
-                list: [
-                  { title: 'Full Width', value: 'full' },
-                  { title: 'Half Width', value: 'half' }
-                ],
-                layout: 'radio'
-              },
-              initialValue: 'full'
-            },
-            {
-              name: 'align',
-              type: 'string',
-              title: 'Horizontal Alignment',
-              options: {
-                list: [
-                  { title: 'Left', value: 'left' },
-                  { title: 'Center', value: 'center' },
-                  { title: 'Right', value: 'right' }
-                ],
-                layout: 'radio'
-              },
-              initialValue: 'center'
-            },
-            {
-              name: 'widthPercent',
-              type: 'number',
-              title: 'Width (%)',
-              description: 'Custom block width relative to the content area.',
-              initialValue: 100,
-              validation: (rule) => rule.min(20).max(100)
-            },
-            {
-              name: 'maxWidth',
-              type: 'number',
-              title: 'Max Width (px)',
-              validation: (rule) => rule.min(200).max(2400)
-            },
-            {
-              name: 'offsetX',
-              type: 'number',
-              title: 'Horizontal Offset (px)',
-              initialValue: 0
-            },
-            {
-              name: 'offsetY',
-              type: 'number',
-              title: 'Vertical Offset (px)',
-              initialValue: 0
-            }
+            ...placementFields,
           ]
         },
         {
@@ -94,45 +106,7 @@ export default defineType({
             { name: 'image', type: 'image', title: 'Image', options: { hotspot: true } },
             { name: 'alt', type: 'string', title: 'Alt Text' },
             { name: 'caption', type: 'string', title: 'Caption' },
-            {
-              name: 'align',
-              type: 'string',
-              title: 'Horizontal Alignment',
-              options: {
-                list: [
-                  { title: 'Left', value: 'left' },
-                  { title: 'Center', value: 'center' },
-                  { title: 'Right', value: 'right' }
-                ],
-                layout: 'radio'
-              },
-              initialValue: 'center'
-            },
-            {
-              name: 'widthPercent',
-              type: 'number',
-              title: 'Width (%)',
-              initialValue: 100,
-              validation: (rule) => rule.min(20).max(100)
-            },
-            {
-              name: 'maxWidth',
-              type: 'number',
-              title: 'Max Width (px)',
-              validation: (rule) => rule.min(200).max(2400)
-            },
-            {
-              name: 'offsetX',
-              type: 'number',
-              title: 'Horizontal Offset (px)',
-              initialValue: 0
-            },
-            {
-              name: 'offsetY',
-              type: 'number',
-              title: 'Vertical Offset (px)',
-              initialValue: 0
-            }
+            ...placementFields,
           ]
         },
         {
@@ -149,45 +123,7 @@ export default defineType({
             { name: 'videoUrl', type: 'url', title: 'Direct Video URL' },
             { name: 'poster', type: 'image', title: 'Poster Image', options: { hotspot: true } },
             { name: 'caption', type: 'string', title: 'Caption' },
-            {
-              name: 'align',
-              type: 'string',
-              title: 'Horizontal Alignment',
-              options: {
-                list: [
-                  { title: 'Left', value: 'left' },
-                  { title: 'Center', value: 'center' },
-                  { title: 'Right', value: 'right' }
-                ],
-                layout: 'radio'
-              },
-              initialValue: 'center'
-            },
-            {
-              name: 'widthPercent',
-              type: 'number',
-              title: 'Width (%)',
-              initialValue: 100,
-              validation: (rule) => rule.min(20).max(100)
-            },
-            {
-              name: 'maxWidth',
-              type: 'number',
-              title: 'Max Width (px)',
-              validation: (rule) => rule.min(200).max(2400)
-            },
-            {
-              name: 'offsetX',
-              type: 'number',
-              title: 'Horizontal Offset (px)',
-              initialValue: 0
-            },
-            {
-              name: 'offsetY',
-              type: 'number',
-              title: 'Vertical Offset (px)',
-              initialValue: 0
-            },
+            ...placementFields,
             { name: 'autoplay', type: 'boolean', title: 'Autoplay', initialValue: true },
             { name: 'loop', type: 'boolean', title: 'Loop', initialValue: true },
             { name: 'muted', type: 'boolean', title: 'Muted', initialValue: true }
@@ -213,32 +149,7 @@ export default defineType({
               initialValue: 960,
               validation: (rule) => rule.min(200).max(2000)
             },
-            {
-              name: 'align',
-              type: 'string',
-              title: 'Horizontal Alignment',
-              options: {
-                list: [
-                  { title: 'Left', value: 'left' },
-                  { title: 'Center', value: 'center' },
-                  { title: 'Right', value: 'right' }
-                ],
-                layout: 'radio'
-              },
-              initialValue: 'left'
-            },
-            {
-              name: 'offsetX',
-              type: 'number',
-              title: 'Horizontal Offset (px)',
-              initialValue: 0
-            },
-            {
-              name: 'offsetY',
-              type: 'number',
-              title: 'Vertical Offset (px)',
-              initialValue: 0
-            }
+            ...placementFields,
           ]
         }
       ]
