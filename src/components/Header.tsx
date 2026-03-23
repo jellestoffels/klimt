@@ -18,12 +18,10 @@ export default function Header() {
     fetchSettings();
   }, []);
 
-  const isProjects = pathname === "/projects";
-  // The Info page in the reference (Red BG) typically uses Black text, or White if dark.
-  // Assuming Info is White/Grey BG -> Black Text. 
-  
-  const textColor = isProjects ? "text-white" : "text-black";
-  const logoColor = isProjects ? "white" : "black";
+  const isDarkHeader = pathname === "/projects" || pathname === "/contact";
+
+  const textColor = isDarkHeader ? "text-white" : "text-black";
+  const logoColor = isDarkHeader ? "white" : "black";
 
   return (
     <header
@@ -32,7 +30,7 @@ export default function Header() {
         "h-[48px] md:h-[64px]", // Slightly taller for better touch targets
         "px-4 laptop:px-[16px]",
         // BG Logic: Black on Projects, Transparent mix on others
-        isProjects ? "bg-black" : "bg-transparent"
+        isDarkHeader ? "bg-transparent" : "bg-transparent"
       )}
     >
       {/* GRID LAYOUT: 4 Columns to spread items evenly */}

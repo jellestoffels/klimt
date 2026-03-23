@@ -4,19 +4,28 @@ import Footer from "@/components/Footer"; // Import Footer
 
 export const revalidate = 60;
 
+type ProjectListItem = {
+  _id: string;
+  title: string;
+  year?: string;
+  imageUrl?: string;
+  slug: {
+    current: string;
+  };
+};
+
 export default async function Projects() {
-  const projects = await client.fetch(`*[_type == "project"]|order(year desc){
+  const projects = (await client.fetch(`*[_type == "project"]|order(year desc){
     _id, title, slug, year, "imageUrl": thumbnail.asset->url
-  }`);
+  }`)) as ProjectListItem[];
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col">
-      
       {/* Main Content Area */}
       <div className="flex-grow w-full max-w-custom mx-auto px-4 laptop:px-[16px] pt-[120px]"> {/* Increased PT to clear header */}
         
         {/* Section Header */}
-        <div className="h-[34px] flex items-center mb-[40px] border-b border-white/20 pb-2">
+        <div className="reveal-up h-[34px] flex items-center mb-[40px] border-b border-white/20 pb-2">
           <span className="font-medium text-[14px] tracking-tight text-white">
             Selected Projects
           </span>
@@ -24,7 +33,7 @@ export default async function Projects() {
 
         {/* Grid Structure */}
         <div className="flex flex-wrap" style={{ gap: '24px 24px' }}>
-           {projects.map((p: any, i: number) => {
+           {projects.map((p, i: number) => {
              const positionInRow = i % 3;
              // Grid logic from previous request
              let widthClass = "";
@@ -39,7 +48,7 @@ export default async function Projects() {
                <Link 
                  key={p._id} 
                  href={`/projects/${p.slug.current}`}
-                 className={`block relative mb-[40px] ${widthClass} ${laptopClass}`}
+                 className={`reveal-up block relative mb-[40px] ${widthClass} ${laptopClass}`}
                >
                  <div className="relative w-full h-auto group">
                     {p.imageUrl && (

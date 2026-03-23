@@ -1,0 +1,73 @@
+Review the references I uploaded. 
+For the Project page I need to have an opportunity to drag and drop the contenet, including text blocks, pictures, and videos. I need to have an option to choose a custom size of the objects, adjust font size and location on the page.
+The animation between pages has to be a slider from random sides with the Dice logo in the center 
+1. SPA-Like Page Transitions (The Wipe Overlay)
+
+Trigger: Intercept all internal <a> clicks (ignore target="_blank", #hash links, and mailto:).
+
+Behavior: Prevent default navigation. Trigger a fixed full-screen overlay (z-index: 9999, background-color: #000) to animate in. Wait for the animation to complete via setTimeout or transitionend, then dynamically update window.location.href.
+
+On Load: When the DOM is ready on the new page, the overlay should already be visible, then smoothly animate out to reveal the page content.
+
+Performance: Do NOT animate height, top, or opacity for the wipe. Use hardware-accelerated transforms: transform: scaleY(1) to scaleY(0) with dynamically updated transform-origin (e.g., origin bottom on enter, origin top on leave) to create a continuous sweeping motion.
+
+Easing: Use a custom, high-end cubic-bezier for the wipe (e.g., cubic-bezier(0.76, 0, 0.24, 1)). Duration: 600ms.
+
+2. Scroll Reveal Engine (IntersectionObserver)
+
+Trigger: Create a reusable IntersectionObserver instance to watch any DOM element with the class .reveal-up.
+
+Configuration: threshold: 0.15, rootMargin: '0px 0px -50px 0px'.
+
+Initial CSS State: opacity: 0, transform: translateY(60px).
+
+Active CSS State: Adds an .is-inview class triggering opacity: 1 and transform: translateY(0).
+
+Easing: Use a fluid, editorial easing curve (e.g., cubic-bezier(0.16, 1, 0.3, 1)). Duration: 1000ms.
+
+Optimization: Once the element intersects and the class is added, explicitly unobserve() the element so the animation only runs once per page load and frees up browser memory.
+
+
+System Prompt: Frontend Developer / Layout Engineer
+
+Context & Stack:
+I am building a vanilla HTML/CSS portfolio website for a creative studio (contact.html). The aesthetic is high-end, brutalist, and ultra-minimalist.
+I need to build the layout for the Contact page based on a specific visual reference. Do not include the main global <header> in your output (I already have it). Generate the CSS and HTML for the main body content.
+
+Global Styles to Enforce:
+
+Theme: Dark mode. Background must be #000000, text #ffffff.
+
+Typography: Clean sans-serif (e.g., Helvetica Neue).
+
+Layout Architecture (CSS Grid):
+
+Create a main container (.contact-wrapper) that takes up height: 100vh and has a padding-top of around 100px (to clear the global header).
+
+Use CSS Grid to create a 3-column layout: grid-template-columns: 1fr 1.5fr 1fr; (Left column for text, Center column for the image card, Right column empty for balance).
+
+Add generous padding to the left (padding-left: 40px).
+
+Column 1: Left Text Sidebar (.contact-info-column)
+
+Use a flex column with a gap of about 40px to separate the distinct data blocks.
+
+Data Blocks: Create blocks for "PROJECT INQUIRIES", "OFFICES" (Amsterdam, Berlin, New York), and "NETWORKS" (Twitter, Instagram, LinkedIn).
+
+Typography Hierarchy: * Section Labels (e.g., "PROJECT INQUIRIES"): font-size: 10px, text-transform: uppercase, letter-spacing: 0.5px, color: #888888 (grey), margin-bottom: 10px.
+
+Body Text & Links: font-size: 16px, line-height: 1.4, color: #ffffff, text-decoration: none. Links should have a hover state that adds text-decoration: underline.
+
+Bottom Footer: Add a tiny copyright string pinned to the absolute bottom-left of this column (font-size: 8px, color: #666666).
+
+Column 2: Center Image Card (.contact-image-card)
+
+This needs to be a relative container holding a portrait-oriented image.
+
+Dimensions: width: 100%; max-width: 500px; aspect-ratio: 3/4;
+
+Image: Use a placeholder image from Unsplash (object-fit: cover, width: 100%, height: 100%). Apply a slight dark gradient overlay over the image to ensure text readability.
+
+Overlay Text (.card-overlay-text): * Positioned absolute in the middle-left of the image card.
+
+Include an h1 ("Studio Klimt" - font-size: 32px, font-weight: 500), a paragraph (short studio bio), and links (email, website).

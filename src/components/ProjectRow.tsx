@@ -3,7 +3,17 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 
-export default function ProjectRow({ project }: { project: any }) {
+type ProjectRowData = {
+  title: string;
+  year?: string;
+  imageUrl?: string;
+  tags?: string[];
+  slug: {
+    current: string;
+  };
+};
+
+export default function ProjectRow({ project }: { project: ProjectRowData }) {
   const [hovered, setHovered] = useState(false);
 
   return (

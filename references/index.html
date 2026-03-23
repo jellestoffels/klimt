@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDIO KLIMT | ARCHIVE</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            overflow: hidden; 
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            padding: 24px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start;
+            z-index: 1000;
+            pointer-events: none; 
+            mix-blend-mode: difference; 
+        }
+        
+        .logo, nav {
+            pointer-events: auto;
+        }
+
+        .logo { 
+            text-decoration: none; 
+            display: block;
+        }
+
+        .logo img {
+            height: 70px; 
+            width: auto;
+            display: block;
+            filter: invert(1); 
+        }
+
+        nav { 
+            display: flex; 
+            gap: 24px; 
+        }
+        
+        nav a { 
+            text-decoration: none; 
+            color: #ffffff; 
+            font-size: 20px; 
+            font-weight: 400; /* Normal weight */
+            letter-spacing: -0.5px;
+            line-height: 1; 
+            transition: opacity 0.3s ease;
+        }
+        
+        nav a:hover { opacity: 0.5; }
+
+        /* THE REFINED ACTIVE STATE */
+        nav a.active {
+            font-weight: 500; /* Dialed down from 700 for a subtler look */
+        }
+
+        /* --- SECTION 1: HERO STATEMENT --- */
+        .hero-statement {
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            gap: 30px; 
+            padding: 0 40px;
+        }
+
+        .hero-logo {
+            width: 56vw; 
+            max-width: 640px; 
+            height: auto;
+            display: block;
+        }
+
+        .hero-statement p {
+            font-size: 15px; 
+            font-weight: 500; 
+            letter-spacing: 0.5px;
+            text-transform: uppercase; 
+            text-align: center;
+            max-width: 800px; 
+            line-height: 1.4; 
+        }
+
+        /* --- CONTACT / MAIL OVERLAY --- */
+        #contact-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; color: #fff; z-index: 2000; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        
+        .close-contact {
+            position: absolute; top: 25px; right: 40px; cursor: pointer;
+            font-size: 16px; color: #fff;
+        }
+
+        .mail-title { font-size: 18vw; font-weight: 400; letter-spacing: -5px; line-height: 1; margin-bottom: 30px; }
+        
+        .contact-details {
+            text-align: center; font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.5px; line-height: 1.6; color: #aaa;
+        }
+        .contact-details span { display: block; color: #fff; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="klimt_dice_logo_bigger.svg" alt="Studio Logo">
+        </a>
+        <nav>
+            <a href="projects.html">Projects</a>
+            <a href="#">About</a>
+            <a href="#" onclick="toggleContact()">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero-statement">
+        <img src="klimt_studio_logo_transparent-01.svg" alt="Studio Klimt" class="hero-logo">
+        <p>A STUDIO FOR CREATIVE DIRECTION, GRAPHIC AND MOTION DESIGN<br>SHAPED BY RHYTHM.</p>
+    </section>
+
+    <div id="contact-overlay">
+        <div class="close-contact" onclick="toggleContact()">Close.</div>
+        <div class="mail-title">Mail</div>
+        <div class="contact-details">
+            STUDIO KLIMT<br>
+            <span>HI@STUDIOKLIMT.COM</span>
+            INSTAGRAM / LINKEDIN / VIMEO<br>
+            AMSTERDAM <span id="clock" style="display:inline;">00:00:00</span>
+        </div>
+    </div>
+
+    <script>
+        function toggleContact() {
+            const overlay = document.getElementById('contact-overlay');
+            if (overlay.style.display === 'flex') {
+                overlay.style.display = 'none';
+            } else {
+                overlay.style.display = 'flex';
+            }
+        }
+
+        setInterval(() => {
+            const time = new Date().toLocaleTimeString('en-GB');
+            document.getElementById('clock').innerText = time;
+        }, 1000);
+    </script>
+</body>
+</html>

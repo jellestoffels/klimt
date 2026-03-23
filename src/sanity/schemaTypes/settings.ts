@@ -37,6 +37,13 @@ export default defineType({
       description: 'The large decorative logo at the bottom of the contact page.',
       options: { hotspot: true }
     }),
+    defineField({
+      name: 'transitionLogo',
+      type: 'image',
+      title: 'Page Transition Logo',
+      description: 'Upload the Dice mark used in the center of the page transition overlay.',
+      options: { hotspot: true }
+    }),
 
     // 3. Text Labels
     defineField({
@@ -49,6 +56,23 @@ export default defineType({
 
     // 4. Contact Details
     defineField({ name: 'email', type: 'string', title: 'Contact Email' }),
+    defineField({
+      name: 'websiteUrl',
+      type: 'url',
+      title: 'Website URL'
+    }),
+    defineField({
+      name: 'contactBio',
+      type: 'text',
+      title: 'Contact Page Bio',
+      rows: 4
+    }),
+    defineField({
+      name: 'contactCardImage',
+      type: 'image',
+      title: 'Contact Page Card Image',
+      options: { hotspot: true }
+    }),
     defineField({ 
       name: 'socials', 
       type: 'array', 
@@ -58,6 +82,18 @@ export default defineType({
         fields: [
           {name: 'platform', type: 'string', title: 'Platform Name (e.g. Instagram)'}, 
           {name: 'url', type: 'url', title: 'URL'}
+        ]
+      }]
+    }),
+    defineField({
+      name: 'offices',
+      type: 'array',
+      title: 'Office Locations',
+      of: [{
+        type: 'object',
+        fields: [
+          { name: 'city', type: 'string', title: 'City' },
+          { name: 'detail', type: 'string', title: 'Detail' }
         ]
       }]
     }),

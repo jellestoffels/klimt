@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT NAME | STUDIO KLIMT</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; 
+            padding: 24px 40px; display: flex; justify-content: space-between; 
+            align-items: flex-start; z-index: 1000;
+            pointer-events: none; mix-blend-mode: difference; 
+        }
+        
+        .logo, nav { pointer-events: auto; }
+        .logo { text-decoration: none; display: block; }
+        .logo img { height: 70px; width: auto; display: block; filter: invert(1); }
+
+        nav { display: flex; gap: 24px; }
+        nav a { 
+            text-decoration: none; color: #ffffff; font-size: 20px; 
+            font-weight: 400; letter-spacing: -0.5px; line-height: 1; 
+            transition: opacity 0.3s ease;
+        }
+        nav a:hover { opacity: 0.5; }
+        nav a.active { font-weight: 500; } /* Keeps "Projects" subtly highlighted */
+
+        /* --- PROJECT LAYOUT --- */
+        .project-header-space { height: 40vh; background: #ffffff; }
+
+        .project-meta-row {
+            display: flex; justify-content: space-between;
+            padding: 0 40px 15px 40px; font-size: 9px;
+            font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.5px; color: #000;
+        }
+
+        .meta-col { flex: 1; }
+        .meta-col:nth-child(2) { text-align: left; padding-left: 10%; }
+        .meta-col:nth-child(3) { text-align: right; padding-right: 10%; }
+        .meta-col:nth-child(4) { text-align: right; }
+
+        /* Modular Gallery CSS */
+        .project-builder {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* The space between each video/image as you scroll down */
+            padding-bottom: 150px; /* Space at the very bottom of the page */
+        }
+
+        .gallery-media {
+            width: 100vw;
+            height: auto;
+            display: block;
+        }
+
+        .project-text {
+            padding: 100px 40px;
+            font-size: 4vw;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            max-width: 80%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="klimt_dice_logo_bigger.svg" alt="Studio Logo">
+        </a>
+        <nav>
+            <a href="projects.html" class="active">Projects</a>
+            <a href="#">About</a>
+            <a href="mailto:hi@studioklimt.com">Contact</a>
+        </nav>
+    </header>
+
+    <div class="project-header-space"></div>
+
+    <div class="project-meta-row">
+        <div class="meta-col">YOUR CLIENT NAME</div>
+        <div class="meta-col">CATEGORY (e.g., SCENOGRAPHY)</div>
+        <div class="meta-col">ROLE / TOOLS</div>
+        <div class="meta-col">2026</div>
+    </div>
+
+    <div class="project-builder">
+        
+        <video class="gallery-media" autoplay loop muted playsinline src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+
+        <div class="project-text">
+            We developed a comprehensive digital experience mapping the future of AI interfaces and motion design.
+        </div>
+
+        <img class="gallery-media" src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=2000&q=80" alt="Project Frame">
+
+        <video class="gallery-media" autoplay loop muted playsinline src="https://www.w3schools.com/html/movie.mp4"></video>
+
+        </div>
+
+</body>
+</html>
