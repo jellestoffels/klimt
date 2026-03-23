@@ -18,6 +18,9 @@ type ProjectBlock = {
   videoFileUrl?: string;
   videoUrl?: string;
   posterUrl?: string;
+  autoplay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
 };
 
 type Project = {
